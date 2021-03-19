@@ -7,5 +7,8 @@ while (true) do
        local x = memory.readbyteunsigned(0x0503);
        local y = memory.readbyteunsigned(0x0500);
        emu.message("x: " .. x .. " y: " .. y);
+
+       local keys_table = {up=true, down=false, left=false, right=false, A=false, B=false, start=false, select=false};
+       joypad.set(1, keys_table);
        emu.frameadvance();
 end

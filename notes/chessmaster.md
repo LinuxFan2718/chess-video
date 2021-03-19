@@ -4,15 +4,19 @@
 
 ### Raw location to look for data
 Data Size: 4 bytes
+
 Data Type / Display: Signed
+
 Addr range: 0500-050C
 
 ### Specific data
 Data Size: 1 byte
+
 Data Type: Unsigned
 
 #### Vertical cursor movement
 Addr: 0500, 0504 All identical
+
 Addr: 0508 the same as 0500, 0504 but add 8 to value
 
 | Ranks | Value |
@@ -28,7 +32,9 @@ Addr: 0508 the same as 0500, 0504 but add 8 to value
 
 #### Horizontal cursor movement
 Addr: 0503, 0507, 050B
+
 0503 == 050B
+
 0507 is 0503 value + 8
 
 | Files | Value |

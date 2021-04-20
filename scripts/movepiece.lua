@@ -20,23 +20,50 @@ function moveHorizontal (file)
        elseif( destination_pixel + 2 < x)
        then
               keys_table = {left=true, right=false};
-       else -- cursor is already in the right place
+       else -- cursor is already in the right place horizontally
               keys_table = {left=false, right=false};
        end
-       joypad.set(1, keys_table);
-       
-       -- move the cursor horizontally
+       return keys_table
+end
 
+function moveVertical (rank)
+       local y = memory.readbyteunsigned(0x0500);
+       local ranks_array = { 196, 172, 150, 124, 102, 78, 54, 28 }
+       local destination_pixel = ranks_array[rank]
+       emu.message("y: " .. y .. " dest: " .. destination_pixel);
        
+       local keys_table = {};
+       
+       if(y < destination_pixel - 2)
+       then
+              keys_table = {up=false, down=true};
+       elseif( destination_pixel + 2 < y)
+       then
+              keys_table = {up=true, down=false};
+       else -- cursor is already in the right place vertically
+              keys_table = {up=false, down=false};
+       end
+       return keys_table
+end
+
+local function split(str)
+       if #str>0 then return str:sub(1,1),split(str:sub(2)) end
+end
+
+function moveCursor (square)
+       file, rank_string = split(square)
+       rank = tonumber(rank_string)
+       keys_table = moveHorizontal(file)
+       vertical_keys_table = moveVertical(rank)
+
+       for k,v in pairs(vertical_keys_table) do keys_table[k] = v end
+
+       joypad.set(1, keys_table);
 end
 
 while (true) do
-       file = "f"
-       moveHorizontal(file)
-       local y = memory.readbyteunsigned(0x0500);
-
-       -- move the cursor vertically
-
+       square = "h8"
+       moveCursor(square)
        -- press A
 
        -- move the cursor horizaontally

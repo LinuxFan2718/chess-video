@@ -10,8 +10,7 @@ function moveHorizontal (file)
        local x = memory.readbyteunsigned(0x0503);
        local files_table = {a=37, b=61, c=85, d=109, e=133, f=157, g=181, h=207}
        local destination_pixel = files_table[file]
-       emu.message("x: " .. x .. " dest: " .. destination_pixel);
-       
+
        local keys_table = {};
        
        if(x < destination_pixel - 2)
@@ -30,8 +29,7 @@ function moveVertical (rank)
        local y = memory.readbyteunsigned(0x0500);
        local ranks_array = { 196, 172, 150, 124, 102, 78, 54, 28 }
        local destination_pixel = ranks_array[rank]
-       emu.message("y: " .. y .. " dest: " .. destination_pixel);
-       
+
        local keys_table = {};
        
        if(y < destination_pixel - 2)
@@ -51,27 +49,75 @@ local function split(str)
 end
 
 function moveCursor (square)
-       file, rank_string = split(square)
-       rank = tonumber(rank_string)
-       keys_table = moveHorizontal(file)
-       vertical_keys_table = moveVertical(rank)
+       local moving = true
+       while (moving) do
+              file, rank_string = split(square)
+              rank = tonumber(rank_string)
+              keys_table = moveHorizontal(file)
+              vertical_keys_table = moveVertical(rank)
 
-       for k,v in pairs(vertical_keys_table) do keys_table[k] = v end
+              moving = false
+              for k,v in pairs(vertical_keys_table) do
+                     keys_table[k] = v
+              end
 
-       joypad.set(1, keys_table);
+              for k,v in pairs(keys_table) do
+                     moving = moving or v
+              end
+
+              joypad.set(1, keys_table);
+              emu.frameadvance();
+
+       end
 end
 
-while (true) do
-       square = "h8"
-       moveCursor(square)
-       -- press A
-
-       -- move the cursor horizaontally
-       -- no op for e2e4
-
-       -- move the cursor vertically
-
-       -- press A
-       emu.frameadvance();
+function justPlay ()
+       while (true) do
+              emu.frameadvance();
+       end
 end
+
+function pressAOnce ()
+       local aDown = {["A"] = true};
+       local aUp = {["A"] = false};
+       local frames = 3
+       for i = 1,frames,1
+       do
+              joypad.set(1, aDown);
+              emu.frameadvance();
+       end
+       for i = 1,frames,1
+       do 
+              emu.frameadvance();
+       end
+       -- adding this loop makes this work
+       -- for k,v in pairs(joypad.get(1)) do
+       --        local throwaway = v
+       -- end
+       -- removing it makes it not work
+       
+       for i = 1,frames,1
+       do
+              joypad.set(1, aUp);
+              emu.frameadvance();
+       end
+       for i = 1,frames,1
+       do 
+              emu.frameadvance();
+       end
+end
+
+function movePiece(uci_move)
+       start_square = uci_move:sub(0, 2)
+       destination_square = uci_move:sub(3, 4)
+
+       moveCursor(start_square);
+       pressAOnce();
+       moveCursor(destination_square);
+       pressAOnce();
+end
+
+movePiece("a8a4");
+--movePiece("c3b1");
+--justPlay();
 

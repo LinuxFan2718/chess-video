@@ -55,3 +55,7 @@ Addr: 0503, 0507, 050B
 006220
 
 006320
+
+### Hyperlinks
+
+[Getting started](https://www.romhacking.net/start/)

@@ -74,7 +74,7 @@ end
 function pressAOnce ()
        local aDown = {["A"] = true};
        local aUp = {["A"] = false};
-       local frames = 3
+       local frames = 10
        for i = 1,frames,1
        do
               joypad.set(1, aDown);

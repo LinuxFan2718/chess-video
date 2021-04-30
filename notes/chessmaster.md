@@ -50,11 +50,11 @@ Addr: 0503, 0507, 050B
 
 ### Candidates for move list
 
-006100
+006100 (from move)
 
-006220
+006220 (to move)
 
-006320
+006320 (meta info such as piece type, maybe what pawn promoted to)
 
 ### Hyperlinks
 

@@ -55,23 +55,23 @@ local square_table = {
        [0x26]="g6",
        [0x27]="h6",
 
-       [0x90]="a7",
-       [0x91]="b7",
-       [0x92]="c7",
-       [0x93]="d7",
-       [0x94]="e7",
-       [0x95]="f7",
-       [0x96]="g7",
-       [0x97]="h7",
+       [0x10]="a7",
+       [0x11]="b7",
+       [0x12]="c7",
+       [0x13]="d7",
+       [0x14]="e7",
+       [0x15]="f7",
+       [0x16]="g7",
+       [0x17]="h7",
 
-       [0x80]="a8",
-       [0x81]="b8",
-       [0x82]="c8",
-       [0x83]="d8",
-       [0x84]="e8",
-       [0x85]="f8",
-       [0x86]="g8",
-       [0x87]="h8",
+       [0x00]="a8",
+       [0x01]="b8",
+       [0x02]="c8",
+       [0x03]="d8",
+       [0x04]="e8",
+       [0x05]="f8",
+       [0x06]="g8",
+       [0x07]="h8",
 }
 
 while (true) do
@@ -83,8 +83,10 @@ while (true) do
               fromPointer = fromPointer + 1
               toPointer = toPointer + 1
               local fromEncoded = memory.readbyteunsigned(fromPointer);
+              fromEncoded = AND(fromEncoded, 0x77)
               local fromDecoded = square_table[fromEncoded];
               local toEncoded = memory.readbyteunsigned(toPointer);
+              toEncoded = AND(toEncoded, 0x77)
               local toDecoded = square_table[toEncoded];
               if ( not (fromDecoded == nil))
               then
@@ -97,16 +99,15 @@ while (true) do
 
               if ( not (toDecoded == nil))
               then
-              --       movesString = movesString .. " 0x" ..string.format("%x", toEncoded).."\n"
-              --else
                      movesString = movesString .. toDecoded .."\n"
               else
-                     movesString = movesString .. "&&\n"
-              end
+              --       movesString = movesString .. "&&\n"
+                     movesString = movesString .. " 0x" ..string.format("%x", toEncoded).."\n"
+       end
 
        until(memory.readbyteunsigned(fromPointer+1) == 0x00)
 
-       gui.text(0,8,movesString);
+       gui.text(0,8,(movesString):sub(-80));
 
        emu.frameadvance();
 end

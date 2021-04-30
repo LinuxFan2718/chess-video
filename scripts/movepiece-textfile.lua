@@ -1,3 +1,5 @@
+local tolerance = 0;
+
 function moveHorizontal (file)
        local x = memory.readbyteunsigned(0x0503);
        local files_table = {a=37, b=61, c=85, d=109, e=133, f=157, g=181, h=207}
@@ -5,10 +7,10 @@ function moveHorizontal (file)
 
        local keys_table = {};
        
-       if(x < destination_pixel - 2)
+       if(x < destination_pixel - tolerance)
        then
               keys_table = {left=false, right=true};
-       elseif( destination_pixel + 2 < x)
+       elseif( destination_pixel + tolerance < x)
        then
               keys_table = {left=true, right=false};
        else -- cursor is already in the right place horizontally
@@ -24,10 +26,10 @@ function moveVertical (rank)
 
        local keys_table = {};
        
-       if(y < destination_pixel - 2)
+       if(y < destination_pixel - tolerance)
        then
               keys_table = {up=false, down=true};
-       elseif( destination_pixel + 2 < y)
+       elseif( destination_pixel + tolerance < y)
        then
               keys_table = {up=true, down=false};
        else -- cursor is already in the right place vertically
@@ -114,7 +116,6 @@ end
 -- https://www.twilio.com/blog/2015/08/romram-hacking-building-an-sms-powered-game-genie-with-lua-and-python.html
 -- A function to read text files
 function read_file (filename)
-       emu.print(filename);
        input = io.open(filename, 'r') -- Open this file with the read flag.
        if (input == nil) then
               emu.print('input is nil');
@@ -127,8 +128,8 @@ function read_file (filename)
        end
 end
 
-move = read_file('../player-move.txt')
-if (not (move == nil)) then
-       emu.print(move);
+playerMove = read_file('../player-move.txt')
+if (not (playerMove == nil)) then
+       emu.print(playerMove);
 end
-movePiece(move);
+movePiece(playerMove);

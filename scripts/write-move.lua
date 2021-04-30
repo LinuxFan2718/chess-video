@@ -98,6 +98,7 @@ while (true) do
        local fromPointer = 0x006120;
        local toPointer = 0x00621F;
        playerMove = read_file('../player-move.txt')
+       chessmasterMove = read_file('../chessmaster-move.txt')
 
        repeat
               fromPointer = fromPointer + 1
@@ -109,10 +110,10 @@ while (true) do
               toEncoded = AND(toEncoded, 0x77)
               local toDecoded = square_table[toEncoded];
 
-              lastMove = fromDecoded .. toDecoded .. "\n"
+              lastMove = fromDecoded .. toDecoded
 
        until(memory.readbyteunsigned(fromPointer+1) == 0x00)
-       if ( not (lastMove == playerMove)) then
+       if ((lastMove ~= playerMove) and (lastMove ~= chessmasterMove)) then
               -- write move to 
               write_file('../chessmaster-move.txt', lastMove)
        end

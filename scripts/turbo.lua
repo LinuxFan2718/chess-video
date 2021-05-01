@@ -1,4 +1,4 @@
-emu.speedmode("turbo")
+emu.speedmode("nothrottle")
 while (true) do
        --gui.text(50,50,"Hello world!");
        emu.frameadvance();

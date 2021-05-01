@@ -1,3 +1,4 @@
+emu.speedmode("nothrottle")
 -- human player has the white pieces
 -- chessmaster AI has the black pieces
 
@@ -237,7 +238,7 @@ while(true) do
     -- check for the move in the text file
     human_move = read_file(human_move_filename);
     -- if it's a new move then play it on the board
-    if (human_move ~= last_human_move) then
+    if (human_move ~= nil and human_move ~= "" and human_move ~= last_human_move) then
       last_human_move = human_move;
       -- play move
       movePiece(human_move);

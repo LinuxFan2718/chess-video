@@ -15,7 +15,8 @@ local pieces_table = {
   [0x24] = 'B',
   [0x25] = 'Q'
 }
-
+-- capital letters are black pieces
+-- lowercase letters are white pieces
 while(true) do
   local board = "";
   local startPointer = 0x001100;

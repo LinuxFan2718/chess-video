@@ -233,6 +233,18 @@ function movePiece(uci_move)
   pressAOnce();
 end
 
+function initialize()
+  -- if it is move 1, erase move file contents
+  local fromPointer = 0x006121;
+  local fromEncoded = memory.readbyteunsigned(fromPointer);
+  if (fromEncoded == 0x00) then -- it is move 1
+    write_file(human_move_filename, "")
+    write_file(chessmaster_move_filename, "")
+  end
+end
+
+initialize()
+
 while(true) do
   if (waiting_for_move_from == 'human') then
     -- check for the move in the text file

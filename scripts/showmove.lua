@@ -77,22 +77,47 @@ local square_table = {
 local meta_table = {
        [0x0]="PxP",
        [0x2]="PxN",
+       [0x3]="PxR",
+       [0x4]="PxB",
+       [0x5]="PxQ",
        [0x6]="P",
-       [0xa]="Kx",
+       [0x7]="PxP ep",
+
+       [0x8]="KxP",
+       [0xa]="KxN",
+       [0xb]="KxR",
+       [0xc]="KxB",
+       [0xd]="KxQ",
        [0xe]="K",
-       [0x10]="Nx",
-       [0x15]="Nx",
+
+       [0x10]="NxP",
+       [0x12]="NxN",
+       [0x13]="NxR",
+       [0x14]="NxB",
+       [0x15]="NxQ",
        [0x16]="N",
-       [0x1c]="Rx",
+
+       [0x18]="RxP",
+       [0x1a]="RxN",
+       [0x1b]="RxR",
+       [0x1c]="RxB",
+       [0x1d]="RxQ",
        [0x1e]="R",
+
        [0x20]="BxP",
        [0x22]="BxN",
        [0x23]="BxR",
-       [0x24]="Bx",
+       [0x24]="BxB",
+       [0x25]="BxQ",
        [0x26]="B",
-       [0x28]="Qx",
-       [0x2c]="Qx",
+
+       [0x28]="QxP",
+       [0x2a]="QxN",
+       [0x2b]="QxR",
+       [0x2c]="QxB",
+       [0x2d]="QxQ",
        [0x2e]="Q",
+
        [0x36]="O-O",
        [0x3e]="O-O-O",
 }
@@ -103,6 +128,7 @@ while (true) do
        local metaPointer = 0x00631E;
 
        local movesString = "";
+       local moveNumber = 1;
        repeat
               fromPointer = fromPointer + 1
               toPointer = toPointer + 1
@@ -116,12 +142,15 @@ while (true) do
               local metaEncoded = memory.readbyteunsigned(metaPointer);
               local metaDecoded = meta_table[metaEncoded];
               local metaString = "";
-              if ( metaDecoded == nil) then
+              if ( metaDecoded == nil) 
+              then
                      metaString = "0x" .. string.format("%x", metaEncoded);
+                     --metaString = "0x" .. string.format("%x", metaPointer);
               else
                      metaString = metaDecoded;
               end
-
+              movesString = movesString .. string.format(moveNumber) .. ". "
+              moveNumber = moveNumber + 1
               if ( not (fromDecoded == nil))
               then
               --       movesString = movesString .. "0x" ..string.format("%x", fromEncoded).. " "
@@ -139,9 +168,10 @@ while (true) do
                      movesString = movesString .. " 0x" ..string.format("%x", toEncoded)
               end
               movesString = movesString .. " " .. metaString .. "\n"
-       until(memory.readbyteunsigned(fromPointer+1) == 0x00)
+       until(memory.readbyteunsigned(fromPointer+1) == 0x00 and memory.readbyteunsigned(fromPointer+2) == 0x00)
 
-       gui.text(0,8,(movesString):sub(-160));
+       --gui.text(0,8,(movesString):sub(100));
+       emu.print(movesString);
 
        emu.frameadvance();
 end

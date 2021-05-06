@@ -252,7 +252,8 @@ while(true) do
     -- if it's a new move then play it on the board
     if (human_move ~= nil and human_move ~= "" and human_move ~= last_human_move) then
       last_human_move = human_move;
-      -- play move
+      -- wait until computer piece is finished moving so
+      -- pressing A will register
       movePiece(human_move);
       waiting_for_move_from = 'chessmaster';
     end

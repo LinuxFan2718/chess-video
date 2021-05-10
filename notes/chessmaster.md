@@ -56,6 +56,16 @@ Addr: 0503, 0507, 050B
 
 006320 (meta info such as piece type, maybe what pawn promoted to)
 
+### A piece move is being animated
+
+When a piece animation of moving is playing, the human
+player cannot pick up a piece by pressing A, the game ignores
+the A press.
+
+0x0e2b is 0x00 when the player can press A
+
+It has nonzero values when a piece is moving.
+
 ### Hyperlinks
 
 [Getting started](https://www.romhacking.net/start/)

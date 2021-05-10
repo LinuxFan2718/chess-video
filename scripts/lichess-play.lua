@@ -227,10 +227,23 @@ function movePiece(uci_move)
   start_square = uci_move:sub(0, 2)
   destination_square = uci_move:sub(3, 4)
 
+  waitAnimationDone();
   moveCursor(start_square);
   pressAOnce();
   moveCursor(destination_square);
   pressAOnce();
+end
+
+function waitAnimationDone()
+  local frames = 10;
+  local animationPointer = 0x0e2b;
+  while(memory.readbyteunsigned(animationPointer) ~=  0x00) do
+    emu.frameadvance();
+  end
+  for i = 1,frames,1
+  do 
+         emu.frameadvance();
+  end
 end
 
 function initialize()

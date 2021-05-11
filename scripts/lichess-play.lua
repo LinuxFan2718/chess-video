@@ -117,6 +117,14 @@ function latest_move()
          local toDecoded = square_table[toEncoded];
          lastMove = fromDecoded .. toDecoded
   until(memory.readbyteunsigned(fromPointer+1) == 0x00)
+  -- use showmove to
+  --   check if lastMove 
+  --   was a pawn
+  --   moved to the first or eighth rank (promoted)
+  -- if so
+  -- use showboard to
+  --   determine what the pawn was promoted to
+  --   add the piece to lastMove
 
   return lastMove
 end

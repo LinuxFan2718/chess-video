@@ -193,18 +193,47 @@ function justPlay ()
   end
 end
 
-function pressAOnce ()
+function pickUpPiece ()
   local aDown = {["A"] = true};
   local aUp = {["A"] = false};
   local frames = 10
+
+  while(memory.readbyteunsigned(0x501) == 0x00) do
+    for i = 1,frames,1
+    do
+          joypad.set(1, aDown);
+          emu.frameadvance();
+    end
+    for i = 1,frames,1
+    do 
+          emu.frameadvance();
+    end
+  end
+
   for i = 1,frames,1
   do
-         joypad.set(1, aDown);
+         joypad.set(1, aUp);
          emu.frameadvance();
   end
   for i = 1,frames,1
   do 
          emu.frameadvance();
+  end
+end
+
+function putDownPiece ()
+  local aDown = {["A"] = true};
+  local aUp = {["A"] = false};
+  local frames = 10
+
+  for i = 1,frames,1
+  do
+        joypad.set(1, aDown);
+        emu.frameadvance();
+  end
+  for i = 1,frames,1
+  do 
+        emu.frameadvance();
   end
 
   for i = 1,frames,1
@@ -224,9 +253,9 @@ function movePiece(uci_move)
 
   waitAnimationDone();
   moveCursor(start_square);
-  pressAOnce();
+  pickUpPiece();
   moveCursor(destination_square);
-  pressAOnce();
+  putDownPiece();
 end
 
 function waitAnimationDone()

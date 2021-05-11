@@ -206,12 +206,7 @@ function pressAOnce ()
   do 
          emu.frameadvance();
   end
-  -- adding this loop makes this work
-  -- for k,v in pairs(joypad.get(1)) do
-  --        local throwaway = v
-  -- end
-  -- removing it makes it not work
-  
+
   for i = 1,frames,1
   do
          joypad.set(1, aUp);

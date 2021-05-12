@@ -103,28 +103,39 @@ function write_file (filename, move)
   io.close(file)
 end
 
+function wasPawn(metaEncoded)
+  return(0x0 < metaEncoded and metaEncoded < 0x8);
+end
+
+function pawnToLastRank(lastMove)
+  destination_rank = lastMove:sub(4, 4)
+  return (destination_rank == "1" or destination_rank == "8")
+end
+
 function latest_move()
   local fromPointer = 0x006120;
   local toPointer = 0x00621F;
+  local metaPointer = 0x00631E;
+  local metaEncoded = nil;
   repeat
          fromPointer = fromPointer + 1
          toPointer = toPointer + 1
+         metaPointer = metaPointer + 1
          local fromEncoded = memory.readbyteunsigned(fromPointer);
          fromEncoded = AND(fromEncoded, 0x77)
          local fromDecoded = square_table[fromEncoded];
          local toEncoded = memory.readbyteunsigned(toPointer);
          toEncoded = AND(toEncoded, 0x77)
          local toDecoded = square_table[toEncoded];
+         metaEncoded = memory.readbyteunsigned(metaPointer);
          lastMove = fromDecoded .. toDecoded
-  until(memory.readbyteunsigned(fromPointer+1) == 0x00)
-  -- use showmove to
-  --   check if lastMove 
-  --   was a pawn
-  --   moved to the first or eighth rank (promoted)
-  -- if so
-  -- use showboard to
-  --   determine what the pawn was promoted to
-  --   add the piece to lastMove
+  until(memory.readbyteunsigned(fromPointer+1) == 0x00 and memory.readbyteunsigned(fromPointer+2) == 0x00)
+
+  -- pawn was promoted
+  if(wasPawn(metaEncoded) and pawnToLastRank(lastMove)) then
+    lastMove = lastMove .. "q"
+    emu.print("pawn was promoted " .. lastMove)
+  end
 
   return lastMove
 end
@@ -255,15 +266,45 @@ function putDownPiece ()
   end
 end
 
+function pressSelect ()
+  local selectDown = {["select"] = true};
+  local selectUp = {["select"] = false};
+  local frames = 10
+
+  for i = 1,frames,1
+  do
+        joypad.set(1, selectDown);
+        emu.frameadvance();
+  end
+  for i = 1,frames,1
+  do 
+        emu.frameadvance();
+  end
+
+  for i = 1,frames,1
+  do
+         joypad.set(1, selectUp);
+         emu.frameadvance();
+  end
+  for i = 1,frames,1
+  do 
+         emu.frameadvance();
+  end
+end
+
 function movePiece(uci_move)
   start_square = uci_move:sub(0, 2)
   destination_square = uci_move:sub(3, 4)
+  promotion_piece = uci_move:sub(5,5)
 
   waitAnimationDone();
   moveCursor(start_square);
   pickUpPiece();
   moveCursor(destination_square);
   putDownPiece();
+  if(string.len(promotion_piece) == 1) then
+    pressSelect()
+  end
 end
 
 function waitAnimationDone()

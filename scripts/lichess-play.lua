@@ -303,7 +303,22 @@ function movePiece(uci_move)
   moveCursor(destination_square);
   putDownPiece();
   if(string.len(promotion_piece) == 1) then
-    pressSelect()
+    if (promotion_piece == "q") then
+      pressSelect()
+    elseif (promotion_piece == "b") then
+      putDownPiece()
+      pressSelect()
+    elseif (promotion_piece == "r") then
+      putDownPiece()
+      putDownPiece()
+      pressSelect()
+    elseif (promotion_piece == "n") then
+      putDownPiece()
+      putDownPiece()
+      putDownPiece()
+      pressSelect()
+    end
+
   end
 end
 
@@ -348,7 +363,7 @@ while(true) do
     -- check for the most recent move in the game move list
     local lastMove = latest_move();
     -- if there's a new move then write it to the text file
-    if (lastMove ~= last_human_move) then
+    if (lastMove:sub(0, 4) ~= last_human_move:sub(0, 4)) then
       write_file(chessmaster_move_filename, lastMove)
       waiting_for_move_from = 'human';
     end

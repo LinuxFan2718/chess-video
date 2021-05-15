@@ -1,14 +1,21 @@
 # Chess bot scripts
 
-[Monroebot profile](https://lichess.org/@/Monroebot) this is the bot
-account I use for Chessmaster to play. It runs on my main computer so
-it is usually not active these days!
+## What is this?
 
 This repo contains lua scripts written for use with the fceux emulator
 and the NES game The Chessmaster (1990).
 
 There are also some notes I made while searching RAM for various bits
 of info.
+
+## Associated lichess bot
+
+This is the bot account I use for Chessmaster to play. 
+
+[Monroebot](https://lichess.org/@/Monroebot)
+
+It is usually not accepting challenges since running it takes over my
+computer!
 
 ## Main purpose
 

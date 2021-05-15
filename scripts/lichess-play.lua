@@ -103,13 +103,22 @@ function write_file (filename, move)
   io.close(file)
 end
 
-function wasPawn(metaEncoded)
-  return(0x0 < metaEncoded and metaEncoded < 0x8);
+function contains(list, x)
+	for _, v in pairs(list) do
+		if v == x then return true end
+	end
+	return false
 end
 
-function pawnToLastRank(lastMove)
+function wasPawn(metaEncoded)
+  return contains({0x0, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7}, metaEncoded);
+end
+
+function moveToLastRank(lastMove)
+  origin_rank = lastMove:sub(2, 2)
   destination_rank = lastMove:sub(4, 4)
-  return (destination_rank == "1" or destination_rank == "8")
+  return ((origin_rank == "2" and destination_rank == "1") 
+    or (origin_rank == "7" and destination_rank == "8"))
 end
 
 function latest_move()
@@ -132,9 +141,50 @@ function latest_move()
   until(memory.readbyteunsigned(fromPointer+1) == 0x00 and memory.readbyteunsigned(fromPointer+2) == 0x00)
 
   -- pawn was promoted
-  if(wasPawn(metaEncoded) and pawnToLastRank(lastMove)) then
-    lastMove = lastMove .. "q"
-    emu.print("pawn was promoted " .. lastMove)
+  if(wasPawn(metaEncoded) and moveToLastRank(lastMove)) then
+    emu.print("metaEncoded = " .. string.format("%x", metaEncoded))
+    local piecePointer = 0x001100;
+    destination_file = lastMove:sub(3, 3)
+    destination_rank = lastMove:sub(4, 4)
+    if (destination_rank == "8") then
+      piecePointer = piecePointer + 0x00
+    elseif (destination_rank == "1") then
+      piecePointer = piecePointer + 0x70
+    else
+      emu.print("unexpected promotion rank " .. lastMove)
+    end
+    local fileAdds = {
+      ["a"] = 0,
+      ["b"] = 1,
+      ["c"] = 2,
+      ["d"] = 3,
+      ["e"] = 4,
+      ["f"] = 5,
+      ["g"] = 6,
+      ["h"] = 7
+    }
+    piecePointer = piecePointer + fileAdds[destination_file]
+    local encoded = memory.readbyteunsigned(piecePointer);
+    local pieces_table = {
+      [0x00] = ' ',
+    
+      [0x10] = 'p',
+      [0x11] = 'k',
+      [0x12] = 'n',
+      [0x13] = 'r',
+      [0x14] = 'b',
+      [0x15] = 'q',
+    
+      [0x20] = 'p',
+      [0x21] = 'k',
+      [0x22] = 'n',
+      [0x23] = 'r',
+      [0x24] = 'b',
+      [0x25] = 'q'
+    }
+    local decoded = pieces_table[encoded];
+    emu.print("promotion to " .. decoded);
+    lastMove = lastMove .. decoded
   end
 
   return lastMove
@@ -363,7 +413,7 @@ while(true) do
     -- check for the most recent move in the game move list
     local lastMove = latest_move();
     -- if there's a new move then write it to the text file
-    if (lastMove:sub(0, 4) ~= last_human_move:sub(0, 4)) then
+    if (lastMove ~= last_human_move) then
       write_file(chessmaster_move_filename, lastMove)
       waiting_for_move_from = 'human';
     end

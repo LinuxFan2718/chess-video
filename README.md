@@ -19,13 +19,15 @@ computer!
 
 ## Main purpose
 
-The best script is for playing Chessmaster as a bot on lichess. It
-works with some other software I wrote called
-[flexo](https://github.com/LinuxFan2718/flexo). Together they
-turn this NES game from 1990 into a UCI-compatible chess engine
-capable of playing on lichess.
+The main lua script is for using Chessmaster to makes moves for
+a bot on lichess. It works with some other software I wrote called
+[flexo](https://github.com/LinuxFan2718/flexo) and the official 
+[lichess-bot](https://github.com/ShailChoksi/lichess-bot) software.
 
-## Why turn a 1990 NES chess game into a UCI engine
+All together they turn this NES game from 1990 into a UCI-compatible 
+chess engine capable of playing on lichess.
+
+## Why turn an NES chess game from 1990 into a UCI engine
 
 I wanted to see if I could.
 
@@ -66,3 +68,7 @@ and restart the lua script.
 ## Oddities that will remain
 
 - Chessmaster ignores the game clock, which is partly offset by running at 32x speed
+
+## The author
+
+[twitter](https://twitter.com/DennisLibre)

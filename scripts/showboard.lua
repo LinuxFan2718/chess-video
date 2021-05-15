@@ -22,7 +22,7 @@ while(true) do
   local startPointer = 0x001100;
   for i = 1,8,1
   do
-    for j = 1,7,1
+    for j = 0,7,1
     do
       local encoded = memory.readbyteunsigned(startPointer + j);
       local decoded = pieces_table[encoded];

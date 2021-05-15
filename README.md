@@ -61,9 +61,9 @@ and restart the lua script.
 
 ## Issues I plan to fix
 
-- Any player move from a8 makes lichess-play stop relaying moves
+- ~~Any player move from a8 makes lichess-play stop relaying moves~~
+- ~~Both players can only promote pawns to queens.~~
 - Chessmaster should be able to play the white pieces.
-- Both players can only promote pawns to queens.
 - A new game should start automatically.
 
 ## Oddities that will remain

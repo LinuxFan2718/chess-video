@@ -138,7 +138,10 @@ function latest_move()
          local toDecoded = square_table[toEncoded];
          metaEncoded = memory.readbyteunsigned(metaPointer);
          lastMove = fromDecoded .. toDecoded
-  until(memory.readbyteunsigned(fromPointer+1) == 0x00 and memory.readbyteunsigned(fromPointer+2) == 0x00)
+  until(memory.readbyteunsigned(fromPointer+1) == 0x00 and 
+        memory.readbyteunsigned(fromPointer+2) == 0x00 and
+        memory.readbyteunsigned(toPointer+1) == 0x00 and
+        memory.readbyteunsigned(toPointer+2) == 0x00)
 
   -- pawn was promoted
   if(wasPawn(metaEncoded) and moveToLastRank(lastMove)) then

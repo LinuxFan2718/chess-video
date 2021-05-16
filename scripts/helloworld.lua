@@ -1,0 +1,1 @@
+emu.print("hello world")

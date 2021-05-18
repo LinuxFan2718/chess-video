@@ -387,6 +387,11 @@ function waitAnimationDone()
   end
 end
 
+function start_new_game(slot)
+  local savestate_object = savestate.object(slot)
+  savestate.load(savestate_object)
+end
+
 function initialize()
   -- if it is move 1, erase move file contents
   local fromPointer = 0x006121;

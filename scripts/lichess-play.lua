@@ -411,9 +411,23 @@ while(true) do
     -- if it's a new move then play it on the board
     if (human_move ~= nil and human_move ~= "" and human_move ~= last_human_move) then
       last_human_move = human_move;
-      -- wait until computer piece is finished moving so
-      -- pressing A will register
-      movePiece(human_move);
+      -- if this is a new game, load the appropriate savestate
+      if (human_move:sub(0,7) == 'newgame') then
+        emu.print("new game")
+        if (human_move:sub(8,12) == 'white') then
+          emu.print("loading new game white")
+          start_new_game(2);
+        elseif( human_move:sub(8,12) == 'black') then
+          emu.print("loading new game black")
+          start_new_game(1);
+          uci_move = human_move:sub(14,17)
+          emu.print("make move " .. uci_move)
+          last_human_move = uci_move;
+          movePiece(uci_move);
+        end
+      else
+        movePiece(human_move);
+      end
       waiting_for_move_from = 'chessmaster';
     end
     
@@ -421,7 +435,7 @@ while(true) do
     -- check for the most recent move in the game move list
     local lastMove = latest_move();
     -- if there's a new move then write it to the text file
-    if (lastMove ~= last_human_move) then
+    if (lastMove ~= last_human_move and lastMove ~= 'a8a8') then
       write_file(chessmaster_move_filename, lastMove)
       waiting_for_move_from = 'human';
     end

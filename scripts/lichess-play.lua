@@ -410,7 +410,7 @@ while(true) do
     human_move = read_file(human_move_filename);
     -- if it's a new move then play it on the board
     if (human_move ~= nil and human_move ~= "" and human_move ~= last_human_move) then
-      last_human_move = human_move;
+      
       -- if this is a new game, load the appropriate savestate
       if (human_move:sub(0,7) == 'newgame') then
         emu.print("new game")
@@ -426,6 +426,7 @@ while(true) do
           movePiece(uci_move);
         end
       else
+        last_human_move = human_move;
         movePiece(human_move);
       end
       waiting_for_move_from = 'chessmaster';
